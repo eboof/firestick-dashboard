@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -35,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eboof.firestickdashboard.data.DashboardRepository
-import com.eboof.firestickdashboard.data.DashboardState
 import com.eboof.firestickdashboard.theme.FirestickDashboardTheme
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +42,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val repository = DashboardRepository(
-            baseUrl = BuildConfig.DASHBOARD_BASE_URL,
+            baseUrls = listOf(
+                BuildConfig.DASHBOARD_BASE_URL,
+                BuildConfig.DASHBOARD_FALLBACK_BASE_URL
+            ),
             apiKey = BuildConfig.DASHBOARD_API_KEY
         )
 
@@ -87,6 +88,7 @@ private fun DashboardScreen(
                     item {
                         Header(
                             lastUpdated = uiState.state?.lastUpdated,
+                            activeBaseUrl = uiState.activeBaseUrl,
                             error = uiState.error,
                             onRefresh = onRefresh
                         )
@@ -114,7 +116,7 @@ private fun DashboardScreen(
 }
 
 @Composable
-private fun Header(lastUpdated: String?, error: String?, onRefresh: () -> Unit) {
+private fun Header(lastUpdated: String?, activeBaseUrl: String?, error: String?, onRefresh: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -127,6 +129,13 @@ private fun Header(lastUpdated: String?, error: String?, onRefresh: () -> Unit) 
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color(0xFF9CA3AF)
             )
+            if (activeBaseUrl != null) {
+                Text(
+                    text = activeBaseUrl,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF6B7280)
+                )
+            }
             if (error != null) {
                 Text("Error: $error", color = Color(0xFFFCA5A5))
             }

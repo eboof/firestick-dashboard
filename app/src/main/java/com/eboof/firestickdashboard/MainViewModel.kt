@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.eboof.firestickdashboard.data.DashboardRepository
-import com.eboof.firestickdashboard.data.DashboardState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,8 @@ import kotlinx.coroutines.launch
 
 data class DashboardUiState(
     val loading: Boolean = true,
-    val state: DashboardState? = null,
+    val state: com.eboof.firestickdashboard.data.DashboardState? = null,
+    val activeBaseUrl: String? = null,
     val error: String? = null
 )
 
@@ -34,8 +34,12 @@ class MainViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(loading = true, error = null)
             runCatching { repository.fetchState() }
-                .onSuccess { state ->
-                    _uiState.value = DashboardUiState(loading = false, state = state)
+                .onSuccess { (baseUrl, state) ->
+                    _uiState.value = DashboardUiState(
+                        loading = false,
+                        state = state,
+                        activeBaseUrl = baseUrl
+                    )
                 }
                 .onFailure { error ->
                     _uiState.value = _uiState.value.copy(loading = false, error = error.message ?: "Unknown error")
