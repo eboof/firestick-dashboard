@@ -15,10 +15,10 @@ android {
         versionCode = 1
         versionName = "0.1.0"
 
-        val baseUrl = (project.findProperty("DASHBOARD_BASE_URL") as String? ?: "https://rob-mac-mini-dashboard.tail5d56a7.ts.net/")
+        val baseUrl = (project.findProperty("DASHBOARD_BASE_URL") as String? ?: "http://10.0.1.90:8000/")
             .trim()
             .let { if (it.endsWith('/')) it else "$it/" }
-        val fallbackBaseUrl = (project.findProperty("DASHBOARD_FALLBACK_BASE_URL") as String? ?: "http://10.0.1.90:8000/")
+        val fallbackBaseUrl = (project.findProperty("DASHBOARD_FALLBACK_BASE_URL") as String? ?: "https://rob-mac-mini-dashboard.tail5d56a7.ts.net/")
             .trim()
             .let { if (it.endsWith('/')) it else "$it/" }
         val apiKey = (project.findProperty("DASHBOARD_API_KEY") as String? ?: "").trim()

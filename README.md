@@ -12,21 +12,21 @@ Android TV / Fire TV dashboard client for the Ivy dashboard server.
 ## Server
 Default primary server URL:
 
-- `https://rob-mac-mini-dashboard.tail5d56a7.ts.net/api/state`
-
-Fallback local URL:
-
 - `http://10.0.1.90:8000/api/state`
+
+Fallback Tailscale URL:
+
+- `https://rob-mac-mini-dashboard.tail5d56a7.ts.net/api/state`
 
 The app reads configuration from `gradle.properties`:
 
 ```properties
-DASHBOARD_BASE_URL=https://rob-mac-mini-dashboard.tail5d56a7.ts.net/
-DASHBOARD_FALLBACK_BASE_URL=http://10.0.1.90:8000/
+DASHBOARD_BASE_URL=http://10.0.1.90:8000/
+DASHBOARD_FALLBACK_BASE_URL=https://rob-mac-mini-dashboard.tail5d56a7.ts.net/
 DASHBOARD_API_KEY=
 ```
 
-If the Tailscale URL is unreachable, the app will try the fallback URL.
+The app tries the local URL first, then falls back to the Tailscale URL.
 
 If `DASHBOARD_API_KEY` is empty, the app sends no auth header.
 
